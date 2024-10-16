@@ -5,7 +5,12 @@ import torch
 
 # Custom Byt5 Model
 class ByT5ForClassification(nn.Module):
-    def __init__(self, model_name, num_labels=2, path=None, freeze=True):
+    def __init__(
+        self,
+        model_name="google/byt5-small",
+        num_labels=2,
+        freeze=True
+    ):
         """
         Initializes the ByT5ForClassification model.
         This model is a T5 model with a linear classifier
@@ -14,18 +19,18 @@ class ByT5ForClassification(nn.Module):
         Args:
             model_name (str):
                 The name or path of the pre-trained T5 model.
+                A path can be provided instead, if a custom, pre-trained
+                model is to be used instead of the base pre-trained model.
+                Defaults to "google/byt5-small".
             num_labels (int, optional):
                 The number of labels for classification. Defaults to 2.
-            path (str, optional):
-                The path to a pre-trained model checkpoint.
-                If provided, the model will be loaded from this path
-                instead of using the model_name. Defaults to None.
+            freeze (bool, optional):
+                Whether to freeze the pre-trained model weights.
+                If True, the pre-trained model weights will not be
+                updated during training. Defaults to True.
         """
         super(ByT5ForClassification, self).__init__()
-        if path:
-            self.model = T5ForConditionalGeneration.from_pretrained(path)
-        else:
-            self.model = T5ForConditionalGeneration.from_pretrained(model_name)
+        self.model = T5ForConditionalGeneration.from_pretrained(model_name)
 
         # Freeze all layers of the pre-trained T5 model
         if freeze:
