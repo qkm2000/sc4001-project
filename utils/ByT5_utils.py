@@ -24,7 +24,8 @@ def prepare_data(
         tokenizer (Tokenizer):
             The tokenizer object used to tokenize the URLs.
         max_length (int, optional):
-            The maximum length of the tokenized sequences. Default is 50.
+            The maximum length of the tokenized sequences.
+            Defaults to 50
 
     Returns:
         torch.utils.data.Dataset:
@@ -87,11 +88,17 @@ def train_ByT5(
             The training arguments for the Trainer.
             If not provided, default hyperparameters will be used.
         need_prepare_data (bool, optional):
-            Whether to preprocess the data before training (default: True).
+            Whether to preprocess the data before training
+            Defaults to True.
         max_length (int, optional):
-            The maximum length of the tokenized sequences (default: 50).
+            The maximum length of the tokenized sequences
+            Defaults to 50.
         patience (int, optional):
             The number of epochs to wait for the loss to improve.
+            Defaults to 5.
+        callback (TrainerCallback, optional):
+            The callback to use during training.
+            If not provided, a default callback will be used.
 
     Returns:
         Trainer: The trained Trainer object.
@@ -227,10 +234,10 @@ def predict_dataframe(
             The tokenizer to use for tokenizing the URLs.
         device (torch.device, optional):
             The device to use for prediction
-            (default: "cuda" if available, else "cpu").
+            Defaults to "cuda" if available, else "cpu".
         steps (int, optional):
             The number of samples to process before printing a progress update
-            (default: 1000).
+            Defaults to 1000.
 
     Returns:
         y_true (list):
@@ -280,6 +287,7 @@ class HF_Trainer_Callback(TrainerCallback):
             The number of epochs to wait for the loss to improve.
             If the loss does not improve for `patience` epochs,
             training will stop.
+            Defaults to 5.
     """
 
     def __init__(self, patience=5):
@@ -305,6 +313,7 @@ class HF_Trainer_Callback(TrainerCallback):
         print("Training ended")
 
 
+# metrics
 def fpr_comparison(
     y_true,
     y_proba,
@@ -348,3 +357,28 @@ def fpr_comparison(
     return_df = pd.DataFrame(df_vals)
     return_df.set_index(pd.Index(fprs), inplace=True)
     return return_df.transpose()
+
+
+def calculate_accuracy_at_thresholds(
+    y_true,
+    y_proba,
+    thresholds=[
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+        0.6,
+        0.7,
+        0.8,
+        0.9
+    ]
+):
+    accuracies = []
+    for threshold in thresholds:
+        predictions = [1 if prob >= threshold else 0 for prob in y_proba]
+        correct_predictions = sum(
+            [1 for true, pred in zip(y_true, predictions) if true == pred])
+        accuracy = correct_predictions / len(y_true)
+        accuracies.append((threshold, accuracy))
+    return accuracies

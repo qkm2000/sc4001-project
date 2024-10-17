@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch
 
 
-# Custom Byt5 Model
+# Custom ByT5 Model
 class ByT5ForClassification(nn.Module):
     def __init__(
         self,
@@ -13,8 +13,8 @@ class ByT5ForClassification(nn.Module):
     ):
         """
         Initializes the ByT5ForClassification model.
-        This model is a T5 model with a linear classifier
-        on top for binary classification tasks.
+        This model is a T5 model with a custom classification head
+        for binary classification tasks.
 
         Args:
             model_name (str):
@@ -29,6 +29,7 @@ class ByT5ForClassification(nn.Module):
                 If True, the pre-trained model weights will not be
                 updated during training. Defaults to True.
         """
+        self.num_labels = num_labels
         super(ByT5ForClassification, self).__init__()
         self.model = T5ForConditionalGeneration.from_pretrained(model_name)
 
@@ -37,8 +38,15 @@ class ByT5ForClassification(nn.Module):
             for param in self.model.parameters():
                 param.requires_grad = False
 
-        # Define the classification layer
-        self.classifier = nn.Linear(self.model.config.d_model, num_labels)
+        # Define a simple fully connected classification
+        # head with ReLU activations
+        self.classifier = nn.Sequential(
+            nn.Linear(self.model.config.d_model, 512),
+            nn.ReLU(),
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256, num_labels),
+        )
 
         # Tie weights to handle shared memory issues with embeddings
         self.model.tie_weights()
@@ -61,14 +69,14 @@ class ByT5ForClassification(nn.Module):
         # Mean pooling
         pooled_output = mean_pooling(hidden_states, attention_mask)
 
-        # Classifier - only this layer will be trained
+        # Classifier - only the layers in the classifier will be trained
         logits = self.classifier(pooled_output)
 
         loss = None
         if labels is not None:
             loss_fct = nn.CrossEntropyLoss()
             loss = loss_fct(
-                logits.view(-1, self.classifier.out_features), labels.view(-1))
+                logits.view(-1, self.num_labels), labels.view(-1))
 
         return {'loss': loss, 'logits': logits}
 
