@@ -41,11 +41,15 @@ class ByT5ForClassification(nn.Module):
         # Define a simple fully connected classification
         # head with ReLU activations
         self.classifier = nn.Sequential(
-            nn.Linear(self.model.config.d_model, 512),
+            nn.Linear(self.model.config.d_model, 1024),
+            nn.ReLU(),
+            nn.Linear(1024, 512),
             nn.ReLU(),
             nn.Linear(512, 256),
             nn.ReLU(),
-            nn.Linear(256, num_labels),
+            nn.Linear(256, 128),
+            nn.ReLU(),
+            nn.Linear(128, num_labels),
         )
 
         # Tie weights to handle shared memory issues with embeddings

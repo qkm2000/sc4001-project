@@ -4,7 +4,7 @@
 In this project, we aim to develop a robust model capable of classifying URLs as either malicious or non-malicious. With the rise of cyber threats, accurately identifying malicious URLs is crucial for enhancing online security and preventing phishing attacks.
 
 ## Approach
-We leverage the ByT5 tokenizer and model, utilizing frozen weights to retain the knowledge from pre-training while focusing on our specific classification task. A classification layer is added on top of the ByT5 architecture to predict the nature of the URLs. This approach allows us to harness the capabilities of deep learning and transfer learning effectively, improving our model's accuracy and performance.
+We leverage the ByT5 tokenizer and model, utilizing frozen weights to retain the knowledge from pre-training while focusing on our specific classification task. A classification head is added on top of the ByT5 architecture to predict the nature of the URLs. This approach allows us to harness the capabilities of deep learning and transfer learning effectively, improving our model's accuracy and performance while reducing computational requirements.
 
 ## Objectives
 * To create a reliable model for identifying malicious URLs.
