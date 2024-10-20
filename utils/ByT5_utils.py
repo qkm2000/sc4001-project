@@ -219,7 +219,8 @@ def predict_dataframe(
         model,
         tokenizer,
         device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
-        steps=1000
+        steps=1000,
+        max_length=50
 ):
     """
     Predicts the classes and probabilities for a dataframe
@@ -264,6 +265,7 @@ def predict_dataframe(
             model=model,
             tokenizer=tokenizer,
             device=device,
+            max_length=max_length
         )
 
         predicted_classes.append(predicted_class)

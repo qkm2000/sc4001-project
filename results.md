@@ -185,3 +185,34 @@ Threshold: 0.90, Accuracy: 0.94
 ```
 
 This model works decently when tested on the phiusiil dataset too, but accuracy is generally around 50%. This likely means that the data is also rather different, and we will require more EDA to gain more insight into the reasons as to why it performs so poorly on other datasets. this model performs especially badly on the malicious_phish dataset
+
+## v5
+
+Data:\
+Model was trained on a 4% sample of URL dataset.csv
+
+Classifier head:
+```
+same as v2
+```
+
+Hyper Params:
+```
+same as v2
+```
+
+Results:
+```
+Threshold: 0.10, Accuracy: 0.78
+Threshold: 0.20, Accuracy: 0.85
+Threshold: 0.30, Accuracy: 0.88
+Threshold: 0.40, Accuracy: 0.90
+Threshold: 0.50, Accuracy: 0.91
+Threshold: 0.60, Accuracy: 0.91
+Threshold: 0.70, Accuracy: 0.90
+Threshold: 0.80, Accuracy: 0.89
+Threshold: 0.90, Accuracy: 0.86
+```
+
+This model performs well on all the different datasets.
+The malicious_phish dataset does not include "http://" or "https://" in the urls, which was probably what was messing up the results in the previous models. With the inclusion of these pieces of data along with data that includes the header, the model is now able to generalise very well across all datasets.
