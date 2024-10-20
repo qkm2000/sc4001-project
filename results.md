@@ -18,6 +18,7 @@ self.classifier = nn.Sequential(
 
 Hyper Params:
 ```
+MAX_LENGTH = 50
 BATCH_SIZE = 128
 training_args = TrainingArguments(
     # saving results/checkpoints
@@ -58,6 +59,8 @@ Threshold: 0.80, Accuracy: 0.88
 Threshold: 0.90, Accuracy: 0.86
 ```
 
+This model performs well on the malicious_phish dataset, but it is also what it is trained on. This model is outdated because we have improved the classification head and the weights learned from this model are no longer applicable. This was more of a feasibility test than anything
+
 ## v2
 
 Data:\
@@ -80,6 +83,7 @@ self.classifier = nn.Sequential(
 
 Hyper Params:
 ```
+MAX_LENGTH = 100
 BATCH_SIZE = 128
 training_args = TrainingArguments(
     # saving results/checkpoints
@@ -119,3 +123,65 @@ Threshold: 0.70, Accuracy: 0.92
 Threshold: 0.80, Accuracy: 0.93
 Threshold: 0.90, Accuracy: 0.93
 ```
+
+This model performs well when tested on malicious_phish.csv, but is very terrible on other datasets. maybe the data is old, outdated, or too different? could it be synthetic data?
+
+## v3
+
+Data:\
+Model was trained on a 10% sample of PhiUSIIL_Phishing_URL_Dataset.csv
+
+Classifier head:
+```
+same as v2
+```
+
+Hyper Params:
+```
+same as v2
+```
+
+Results:
+```
+Threshold: 0.10, Accuracy: 0.91
+Threshold: 0.20, Accuracy: 0.96
+Threshold: 0.30, Accuracy: 0.97
+Threshold: 0.40, Accuracy: 0.96
+Threshold: 0.50, Accuracy: 0.96
+Threshold: 0.60, Accuracy: 0.96
+Threshold: 0.70, Accuracy: 0.95
+Threshold: 0.80, Accuracy: 0.95
+Threshold: 0.90, Accuracy: 0.93
+```
+
+This model works decently when tested on the URL dataset too, but accuracy is generally around 50%. This likely means that the data is also rather different, and we will require more EDA to gain more insight into the reasons as to why it performs so poorly on other datasets. this model performs especially badly on the malicious_phish dataset
+
+## v4
+
+Data:\
+Model was trained on a 4% sample of URL dataset.csv
+
+Classifier head:
+```
+same as v2
+```
+
+Hyper Params:
+```
+same as v2
+```
+
+Results:
+```
+Threshold: 0.10, Accuracy: 0.95
+Threshold: 0.20, Accuracy: 0.96
+Threshold: 0.30, Accuracy: 0.96
+Threshold: 0.40, Accuracy: 0.96
+Threshold: 0.50, Accuracy: 0.96
+Threshold: 0.60, Accuracy: 0.96
+Threshold: 0.70, Accuracy: 0.95
+Threshold: 0.80, Accuracy: 0.95
+Threshold: 0.90, Accuracy: 0.94
+```
+
+This model works decently when tested on the phiusiil dataset too, but accuracy is generally around 50%. This likely means that the data is also rather different, and we will require more EDA to gain more insight into the reasons as to why it performs so poorly on other datasets. this model performs especially badly on the malicious_phish dataset
