@@ -189,7 +189,7 @@ This model works decently when tested on the phiusiil dataset too, but accuracy 
 ## v5
 
 Data:\
-Model was trained on a 4% sample of URL dataset.csv
+Model was trained on a 2% sample of all the datasets we have combined together
 
 Classifier head:
 ```
