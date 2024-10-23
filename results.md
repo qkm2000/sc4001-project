@@ -216,3 +216,59 @@ Threshold: 0.90, Accuracy: 0.86
 
 This model performs well on all the different datasets.
 The malicious_phish dataset does not include "http://" or "https://" in the urls, which was probably what was messing up the results in the previous models. With the inclusion of these pieces of data along with data that includes the header, the model is now able to generalise very well across all datasets.
+
+## v6
+
+Data:\
+Model was trained on a 2% sample of all the datasets we have combined together
+
+Classifier head:
+```
+same as v2
+last 2 layers of the decoder were unfrozen and trained
+```
+
+Hyper Params:
+```
+MAX_LENGTH = 100
+BATCH_SIZE = 32
+training_args = TrainingArguments(
+    # saving results/checkpoints
+    output_dir=RESULTS_PATH,
+    save_safetensors=False,
+
+    # evaluation
+    eval_strategy="epoch",
+    eval_steps=1,
+    load_best_model_at_end=True,
+    metric_for_best_model='eval_loss',
+    greater_is_better=False,
+    
+    # saving
+    save_strategy="epoch",
+    save_steps=1,
+    save_total_limit=3,
+
+    # hyperparameters
+    learning_rate=0.005,
+    per_device_train_batch_size=BATCH_SIZE,
+    per_device_eval_batch_size=BATCH_SIZE,
+    num_train_epochs=100,
+    weight_decay=0.01,
+)
+```
+
+Results:
+```
+Threshold: 0.10, Accuracy: 0.93
+Threshold: 0.20, Accuracy: 0.94
+Threshold: 0.30, Accuracy: 0.94
+Threshold: 0.40, Accuracy: 0.94
+Threshold: 0.50, Accuracy: 0.94
+Threshold: 0.60, Accuracy: 0.95
+Threshold: 0.70, Accuracy: 0.96
+Threshold: 0.80, Accuracy: 0.96
+Threshold: 0.90, Accuracy: 0.93
+```
+
+This model is by far the best performing model (0.99 accuracy on phiusiil and url_dataset, and about 0.90 on malicious_phish). This is most probably because the last 2 layers of the decoder were trained along with the classifier head, allowing the model to learn more about the URLs and their relations to whether they were malicious or not
