@@ -33,3 +33,7 @@ MODEL_PATH=".../model_files"
 Replace the `...` with the path to the root of the project, so that all results and model files will be present in the project.
 
 However, these will not be synced to git because they can be quite huge and annoying to deal with. Once we have the final model that we want, then we create a folder to save it in, and push that to git.
+
+## EDA
+
+Please run [EDA.ipynb](EDA.ipynb) to retrieve the images for EDA. These will not be uploaded to git due to their size and number of files.
