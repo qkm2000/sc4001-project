@@ -272,3 +272,65 @@ Threshold: 0.90, Accuracy: 0.93
 ```
 
 This model is by far the best performing model (0.99 accuracy on phiusiil and url_dataset, and about 0.90 on malicious_phish). This is most probably because the last 2 layers of the decoder were trained along with the classifier head, allowing the model to learn more about the URLs and their relations to whether they were malicious or not
+
+## v7
+
+Data:\
+Model was trained on a 2% sample of all the datasets we have combined together
+
+Classifier head:
+```
+same as v2
+last 4 layers of the decoder were unfrozen and trained
+```
+
+Hyper Params:
+```
+same as v6
+```
+
+Results:
+```
+Threshold: 0.10, Accuracy: 0.90
+Threshold: 0.20, Accuracy: 0.94
+Threshold: 0.30, Accuracy: 0.95
+Threshold: 0.40, Accuracy: 0.95
+Threshold: 0.50, Accuracy: 0.95
+Threshold: 0.60, Accuracy: 0.95
+Threshold: 0.70, Accuracy: 0.94
+Threshold: 0.80, Accuracy: 0.92
+Threshold: 0.90, Accuracy: 0.91
+```
+
+This model performed even better than v6 when tested on the individual datasets. That said, it took much longer to train, which may not have been worth it considering the small improvement in accuracy
+
+## v8
+
+Data:\
+Model was trained on a 10% sample of all the datasets we have combined together
+
+Classifier head:
+```
+same as v2
+last 4 layers of the decoder were unfrozen and trained
+```
+
+Hyper Params:
+```
+same as v6
+```
+
+Results:
+```
+Threshold: 0.10, Accuracy: 0.85
+Threshold: 0.20, Accuracy: 0.90
+Threshold: 0.30, Accuracy: 0.93
+Threshold: 0.40, Accuracy: 0.94
+Threshold: 0.50, Accuracy: 0.95
+Threshold: 0.60, Accuracy: 0.94
+Threshold: 0.70, Accuracy: 0.94
+Threshold: 0.80, Accuracy: 0.93
+Threshold: 0.90, Accuracy: 0.92
+```
+
+Similar to v7, a very good model that is capable of generalising and producing great results. However, it also took more than an hour to train. This accuracy improvement over the simpler models trained on less data is arguably not worth it when we take into account the amount of time taken to train the model

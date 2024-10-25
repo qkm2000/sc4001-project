@@ -10,8 +10,10 @@ class ByT5ForClassification(nn.Module):
         model_name="google/byt5-small",
         num_labels=2,
         freeze=True,
-        encoder_unfrozen_layers=0,
-        decoder_unfrozen_layers=0,
+        encoder_front_unfrozen_layers=0,
+        encoder_end_unfrozen_layers=0,
+        decoder_front_unfrozen_layers=0,
+        decoder_end_unfrozen_layers=0,
     ):
         """
         Initializes the ByT5ForClassification model.
@@ -42,8 +44,10 @@ class ByT5ForClassification(nn.Module):
         # Freeze all layers of the pre-trained T5 model
         if freeze:
             self._freeze_layers(
-                encoder_unfrozen_layers,
-                decoder_unfrozen_layers
+                encoder_front_unfrozen_layers,
+                encoder_end_unfrozen_layers,
+                decoder_front_unfrozen_layers,
+                decoder_end_unfrozen_layers
             )
 
         # Define a simple fully connected classification
@@ -70,17 +74,23 @@ class ByT5ForClassification(nn.Module):
         self.model.to(self.device)
         self.to(self.device)
 
-    def _freeze_layers(self, encoder_unfrozen_layers, decoder_unfrozen_layers):
+    def _freeze_layers(
+        self,
+        encoder_front_unfrozen_layers,
+        encoder_end_unfrozen_layers,
+        decoder_front_unfrozen_layers,
+        decoder_end_unfrozen_layers,
+    ):
         encoder_layers = self.model.encoder.block
         decoder_layers = self.model.decoder.block
 
         # Freeze encoder layers
-        for layer in encoder_layers[:len(encoder_layers)-encoder_unfrozen_layers-1]:
+        for layer in encoder_layers[encoder_front_unfrozen_layers:len(encoder_layers)-encoder_end_unfrozen_layers-1]:
             for param in layer.parameters():
                 param.requires_grad = False
 
         # Freeze decoder layers
-        for layer in decoder_layers[:len(decoder_layers)-decoder_unfrozen_layers-1]:
+        for layer in decoder_layers[decoder_front_unfrozen_layers:len(decoder_layers)-decoder_end_unfrozen_layers-1]:
             for param in layer.parameters():
                 param.requires_grad = False
 
